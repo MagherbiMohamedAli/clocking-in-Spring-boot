@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins = "https://clocking-in-angular-3aee.vercel.app/")
+@CrossOrigin(origins = "https://biramgroup.vercel.app/")
 public class UserController {
     @Autowired
     UserRepository userRepository;
