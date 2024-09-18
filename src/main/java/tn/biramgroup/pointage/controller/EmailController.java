@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/email")
-@CrossOrigin(origins = "https://clocking-in-angular-3aee.vercel.app/")
+@CrossOrigin(origins = "https://biramgroup.vercel.app/")
 public class EmailController {
 //
 //    @Autowired
