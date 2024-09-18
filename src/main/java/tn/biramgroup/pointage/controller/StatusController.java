@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/status")
-@CrossOrigin(origins = "http://192.168.1.18:4200")
+@CrossOrigin(origins = "https://biramgroup.vercel.app/")
 public class StatusController {
     @Autowired
     private StatusRepository statusRepository;

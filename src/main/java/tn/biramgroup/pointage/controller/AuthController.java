@@ -20,7 +20,7 @@ import tn.biramgroup.pointage.springSecurityJwt.AuthResponse;
 import tn.biramgroup.pointage.springSecurityJwt.JwtTokenUtil;
 
 @RestController
-@CrossOrigin(origins = "http://192.168.1.18:4200")
+@CrossOrigin(origins = "https://biramgroup.vercel.app/")
 public class AuthController {
     @Autowired
     AuthenticationManager authManager;
