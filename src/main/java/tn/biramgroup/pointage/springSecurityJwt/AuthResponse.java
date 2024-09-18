@@ -2,6 +2,7 @@ package tn.biramgroup.pointage.springSecurityJwt;
 
 import lombok.Getter;
 import lombok.Setter;
+import tn.biramgroup.pointage.model.EWorkMode;
 import tn.biramgroup.pointage.model.Role;
 import tn.biramgroup.pointage.model.Status;
 
@@ -21,7 +22,8 @@ public class AuthResponse {
     private Status status;
     private LocalDateTime modified;
     private Long totalMinutesWorked;
-    public AuthResponse(String email, String accessToken, Long id, String username, Set<Role> roles, String nom, String prenom, Status status, LocalDateTime modified, Long totalMinutesWorked) {
+    private EWorkMode workMode;
+    public AuthResponse(String email, String accessToken, Long id, String username, Set<Role> roles, String nom, String prenom, Status status, LocalDateTime modified, Long totalMinutesWorked, EWorkMode workMode) {
         this.email = email;
         this.accessToken = accessToken;
         this.id = id;
@@ -32,6 +34,7 @@ public class AuthResponse {
         this.status = status;
         this.modified = modified;
         this.totalMinutesWorked = totalMinutesWorked;
+        this.workMode = workMode;
     }
 
 }

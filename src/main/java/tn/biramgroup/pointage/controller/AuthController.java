@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import tn.biramgroup.pointage.Repository.RoleRepository;
-import tn.biramgroup.pointage.model.ERole;
 import tn.biramgroup.pointage.model.User;
 import tn.biramgroup.pointage.services.implement.UserService;
 import tn.biramgroup.pointage.springSecurityJwt.AuthRequest;
@@ -20,6 +18,7 @@ import tn.biramgroup.pointage.springSecurityJwt.AuthResponse;
 import tn.biramgroup.pointage.springSecurityJwt.JwtTokenUtil;
 
 @RestController
+//@CrossOrigin(origins = "http://localhost:4200")
 @CrossOrigin(origins = "https://biramgroup.vercel.app/")
 public class AuthController {
     @Autowired
@@ -49,7 +48,8 @@ public class AuthController {
                     user.getPrenom(),
                     user.getStatus(),
                     user.getModified(),
-                    user.getTotalMinutesWorked()
+                    user.getTotalMinutesWorked(),
+                    user.getWorkMode()
             );
 
             return ResponseEntity.ok().body(response);

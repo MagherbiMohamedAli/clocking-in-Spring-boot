@@ -11,6 +11,8 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/email")
+//@CrossOrigin(origins = "http://localhost:4200")
+
 @CrossOrigin(origins = "https://biramgroup.vercel.app/")
 public class EmailController {
 //

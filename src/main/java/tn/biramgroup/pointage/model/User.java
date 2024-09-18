@@ -59,6 +59,9 @@ public class User implements UserDetails {
     @JsonIgnoreProperties({"users"})
     private Set<Role> roles = new HashSet<>();
 
+    @Enumerated(EnumType.STRING)
+    private EWorkMode workMode;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")
     private Status status;

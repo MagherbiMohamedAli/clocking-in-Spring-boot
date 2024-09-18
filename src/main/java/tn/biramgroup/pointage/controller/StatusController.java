@@ -13,6 +13,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/status")
+//@CrossOrigin(origins = "http://localhost:4200")
+
 @CrossOrigin(origins = "https://biramgroup.vercel.app/")
 public class StatusController {
     @Autowired

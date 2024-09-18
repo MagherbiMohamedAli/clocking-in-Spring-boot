@@ -11,4 +11,6 @@ import java.util.Set;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Optional<Role> findByRole(ERole role);
-    boolean existsByRole(String role);}
+    boolean existsByRole(String role);
+
+}

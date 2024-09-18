@@ -1,5 +1,6 @@
 package tn.biramgroup.pointage.services.implement;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -43,6 +45,22 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+    public void updateUserStatusAndWorkMode(Long userId, Long statusId, Optional<String> workMode) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        // Update status
+        Status status = statusRepository.findById(statusId).orElseThrow(() -> new EntityNotFoundException("Status not found"));
+        user.setStatus(status);
+
+        // Update workMode if present
+        if (workMode.isPresent()) {
+            user.setWorkMode(EWorkMode.valueOf(workMode.get()));
+        }
+
+        userRepository.save(user);
+    }
+
+
 
     public User addNewUser(User user) {
         try {

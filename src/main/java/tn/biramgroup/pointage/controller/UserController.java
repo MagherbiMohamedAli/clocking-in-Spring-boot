@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.biramgroup.pointage.Repository.RoleRepository;
 import tn.biramgroup.pointage.Repository.StatusRepository;
 import tn.biramgroup.pointage.Repository.UserRepository;
-import tn.biramgroup.pointage.model.EStatus;
-import tn.biramgroup.pointage.model.Status;
-import tn.biramgroup.pointage.model.User;
+import tn.biramgroup.pointage.model.*;
 import tn.biramgroup.pointage.services.implement.StatusService;
 import tn.biramgroup.pointage.services.implement.UserService;
 import tn.biramgroup.pointage.springSecurityJwt.Message;
@@ -18,10 +17,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/user")
 @CrossOrigin(origins = "https://biramgroup.vercel.app/")
+//@CrossOrigin(origins = "http://localhost:4200")
+
 public class UserController {
     @Autowired
     UserRepository userRepository;
@@ -31,6 +33,8 @@ public class UserController {
     StatusRepository statusRepository;
     @Autowired
     StatusService statusService;
+    @Autowired
+    RoleRepository roleRepository;
 
     @GetMapping("/getUserById/{id}")
     public ResponseEntity<?> getUserById(@PathVariable long id){
@@ -45,6 +49,15 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
+    }
+    @GetMapping("/employees")
+    public ResponseEntity<List<User>> getAllEmployees() {
+        Role employeeRole = roleRepository.findByRole(ERole.ROLE_EMPLOYEE)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+
+        List<User> employees = userRepository.findByRoles(Set.of(employeeRole));
+
+        return ResponseEntity.ok(employees);
     }
     @GetMapping("/byStatus")
     public ResponseEntity<List<User>> getUsersByStatus(@RequestParam Long statusId) {
@@ -92,6 +105,19 @@ public class UserController {
         return ResponseEntity.ok(totalTimeMap);
     }
 
+    @PostMapping("/{userId}/status")
+    public ResponseEntity<?> updateUserStatus(
+            @PathVariable Long userId,
+            @RequestBody Map<String, Object> payload) {
+
+        Long statusId = Long.valueOf(payload.get("statusId").toString());
+        Optional<String> workMode = Optional.ofNullable((String) payload.get("workMode"));
+
+        // Update the user status and work mode
+        userService.updateUserStatusAndWorkMode(userId, statusId, workMode);
+
+        return ResponseEntity.ok().build();
+    }
 
 
 
