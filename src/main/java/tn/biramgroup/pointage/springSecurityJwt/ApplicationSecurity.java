@@ -59,7 +59,7 @@ public class ApplicationSecurity {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/auth/signup").hasRole("ADMIN")
+                        .requestMatchers("/auth/signup").permitAll()
                         .requestMatchers("/api/user/verify").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(handler -> handler
