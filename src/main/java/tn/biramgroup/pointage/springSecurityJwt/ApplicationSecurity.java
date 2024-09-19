@@ -62,6 +62,9 @@ public class ApplicationSecurity {
                        .requestMatchers("/api/abs/pending").hasRole("ADMIN")
                         .requestMatchers("/api/abs/approved").hasRole("ADMIN")
                         .requestMatchers("/api/abs/denied").hasRole("ADMIN")
+                        .requestMatchers("/api/user/delete/{id}").hasRole("ADMIN")
+                        .requestMatchers("/api/user/update/{id}").hasRole("ADMIN")
+
                         .requestMatchers("/api/abs/{absenceId}/approve").hasRole("ADMIN")
                         //.requestMatchers("/api/user/verify").permitAll()
                         .anyRequest().authenticated())

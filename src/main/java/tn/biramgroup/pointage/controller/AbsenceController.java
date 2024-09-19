@@ -3,6 +3,8 @@ package tn.biramgroup.pointage.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import tn.biramgroup.pointage.Repository.AbsenceRepository;
 import tn.biramgroup.pointage.Repository.UserRepository;
@@ -86,5 +88,40 @@ public class AbsenceController {
         }
     }
 
+    @GetMapping("/my-absence")
+    public ResponseEntity<?> getLoggedInUserAbsence() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        Optional<User> userOpt = userRepository.findByEmail(email);
+
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+
+            Absence absence = user.getAbsence();
+
+            if (absence != null) {
+                // Prepare response data
+                Map<String, Object> response = new HashMap<>();
+                response.put("nom", user.getNom());
+                response.put("prenom", user.getPrenom());
+                response.put("type", absence.getType());
+                response.put("dateStart", absence.getDateStart());
+                response.put("dateEnd", absence.getDateEnd());
+                response.put("description", absence.getDescription());
+                response.put("status", absence.getAccepted() == null ? "Pending" : absence.getAccepted() ? "Approved" : "Denied");
+                response.put("status", absence.getAccepted() == null ? "Pending" : absence.getAccepted() ? "Approved" : "Denied");
+
+                long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(absence.getDateStart(), absence.getDateEnd());
+                response.put("numberOfDays", daysBetween);
+
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No absence record found for this user.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        }
+    }
 
 }

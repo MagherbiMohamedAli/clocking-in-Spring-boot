@@ -112,13 +112,40 @@ public class UserController {
 
         Long statusId = Long.valueOf(payload.get("statusId").toString());
         Optional<String> workMode = Optional.ofNullable((String) payload.get("workMode"));
-
-        // Update the user status and work mode
         userService.updateUserStatusAndWorkMode(userId, statusId, workMode);
 
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+            return new ResponseEntity<>(new Message("User deleted successfully"), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new Message("User not found"), HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable long id, @RequestBody User updatedUser) {
+        Optional<User> userOpt = userRepository.findById(id);
+
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+
+            user.setNom(updatedUser.getNom());
+            user.setPrenom(updatedUser.getPrenom());
+            user.setEmail(updatedUser.getEmail());
+
+            userRepository.save(user);
+
+            return new ResponseEntity<>(new Message("User updated successfully"), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new Message("User not found"), HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 }
