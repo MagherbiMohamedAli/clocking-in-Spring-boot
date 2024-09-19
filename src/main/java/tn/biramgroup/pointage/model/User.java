@@ -1,5 +1,6 @@
 package tn.biramgroup.pointage.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -81,6 +82,10 @@ public class User implements UserDetails {
 
     @Column(name = "entry_time")
     private LocalDateTime entryTime;
+    @ManyToOne
+    @JoinColumn(name = "absence_id")
+    @JsonBackReference
+    private Absence absence;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

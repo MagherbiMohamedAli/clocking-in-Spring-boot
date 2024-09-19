@@ -59,8 +59,11 @@ public class ApplicationSecurity {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/auth/signup").hasRole("ADMIN")
-                        .requestMatchers("/api/user/verify").permitAll()
+                       .requestMatchers("/api/abs/pending").hasRole("ADMIN")
+                        .requestMatchers("/api/abs/approved").hasRole("ADMIN")
+                        .requestMatchers("/api/abs/denied").hasRole("ADMIN")
+                        .requestMatchers("/api/abs/{absenceId}/approve").hasRole("ADMIN")
+                        //.requestMatchers("/api/user/verify").permitAll()
                         .anyRequest().authenticated())
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint((request, response, ex) -> {
