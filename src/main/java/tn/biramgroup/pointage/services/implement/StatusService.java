@@ -43,30 +43,30 @@ public class StatusService {
 
         LocalDateTime now = LocalDateTime.now();
 
+        logger.info("Updating status for user {} to {}", userId, newStatus);
+
         if (user.getStatus() != null) {
             if (user.getStatus().getStatus() == EStatus.ENTREE && newStatus != EStatus.ENTREE) {
                 Duration duration = Duration.between(user.getEntryTime(), now);
                 long minutesWorked = duration.toMinutes();
+                logger.info("Adding {} minutes to total worked time for user {}", minutesWorked, userId);
                 user.setTotalMinutesWorked(user.getTotalMinutesWorked() + minutesWorked);
                 userService.saveMonthlyWorkRecord(user, minutesWorked);
                 user.setEntryTime(null);
             }
 
             if (newStatus == EStatus.ENTREE) {
-                if (user.getEntryTime() == null) {
-                    user.setEntryTime(now);
-                } else {
-                    user.setEntryTime(now);
-                }
-                System.out.println("Entry time set to: " + user.getEntryTime());
+                user.setEntryTime(now);
+                logger.info("Set entryTime for user {} to {}", userId, now);
             }
-
         } else if (newStatus == EStatus.ENTREE) {
             user.setEntryTime(now);
+            logger.info("Initial entryTime set for user {}: {}", userId, now);
         }
 
         user.setStatus(status);
         userRepository.save(user);
+        logger.info("User status updated successfully for user {}", userId);
     }
 
     public long getTotalMinutesWorked(Long userId) {
@@ -74,6 +74,8 @@ public class StatusService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         long totalMinutes = user.getTotalMinutesWorked() != null ? user.getTotalMinutesWorked() : 0L;
+
+        logger.info("Fetching total minutes worked for user {}: {}", userId, totalMinutes);
 
         if (user.getStatus() != null && user.getStatus().getStatus() == EStatus.ENTREE && user.getEntryTime() != null) {
             long currentSessionMinutes = ChronoUnit.MINUTES.between(user.getEntryTime(), LocalDateTime.now());
