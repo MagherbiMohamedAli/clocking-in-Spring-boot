@@ -6,11 +6,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import tn.biramgroup.pointage.Repository.RoleRepository;
 import tn.biramgroup.pointage.Repository.StatusRepository;
 import tn.biramgroup.pointage.Repository.UserRepository;
-import tn.biramgroup.pointage.model.EStatus;
-import tn.biramgroup.pointage.model.Status;
-import tn.biramgroup.pointage.model.User;
+import tn.biramgroup.pointage.model.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -18,11 +17,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class StatusService {
     private static final Logger logger = LoggerFactory.getLogger(StatusService.class);
 
+    @Autowired
+    RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -88,10 +90,13 @@ public class StatusService {
     }
 
     public Map<Long, Long> getTotalTimeWorkedForAllUsers() {
-        List<User> users = userRepository.findAll();
+        Role employeeRole = roleRepository.findByRole(ERole.ROLE_EMPLOYEE)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+
+        List<User> employees = userRepository.findByRoles(Set.of(employeeRole));
         Map<Long, Long> totalTimeMap = new HashMap<>();
 
-        for (User user : users) {
+        for (User user : employees) {
             long totalMinutes = getTotalMinutesWorked(user.getId());
             totalTimeMap.put(user.getId(), totalMinutes);
         }
